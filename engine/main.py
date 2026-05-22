@@ -159,10 +159,11 @@ async def stream_logs(
         raise HTTPException(status_code=404, detail=f"Run {run_id} not found")
 
     manager: RunManager = request.app.state.run_manager
+    last_event_id = request.headers.get("last-event-id")
     streamer = LogStreamer(str(run_dir), run_id, manager)
 
     async def event_generator() -> AsyncIterator[str]:
-        async for event in streamer.stream(follow=follow):
+        async for event in streamer.stream(follow=follow, last_event_id=last_event_id):
             yield event
 
     return StreamingResponse(
