@@ -33,7 +33,7 @@ services:
       FORGE_REGISTRY_URL: http://registry:8001
       FORGE_MAX_CONCURRENCY: "4"
       FORGE_JOB_TIMEOUT: "1800"
-      FORGE_BUILD_NETWORK: forge_forge_build_net
+      FORGE_BUILD_NETWORK: forge_build_net
       FORGE_SLACK_WEBHOOK: "${FORGE_SLACK_WEBHOOK:-}"
       FORGE_SLACK_ONCALL: "${FORGE_SLACK_ONCALL:-}"
     volumes:
