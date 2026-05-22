@@ -320,16 +320,15 @@ class RunManager:
                     # Check which jobs in this level should be skipped (dep failed)
                     jobs_to_run = []
                     for job_name in level:
-                needs = pipeline["jobs"][job_name].get("needs", [])
-                if any(job_statuses.get(n) in {STATUS_FAILED, STATUS_SKIPPED, STATUS_INTEGRITY_FAILURE} for n in needs):
-                    job_statuses[job_name] = STATUS_SKIPPED
-                    self._update_job_status(run_id, job_name, STATUS_SKIPPED)
-                    # Mark transitive dependents
-                    for dep in dag.get_dependents(job_name):
-                        job_statuses[dep] = STATUS_SKIPPED
-                        self._update_job_status(run_id, dep, STATUS_SKIPPED)
-                else:
-                    jobs_to_run.append(job_name)
+                        needs = pipeline["jobs"][job_name].get("needs", [])
+                        if any(job_statuses.get(n) in {STATUS_FAILED, STATUS_SKIPPED, STATUS_INTEGRITY_FAILURE} for n in needs):
+                            job_statuses[job_name] = STATUS_SKIPPED
+                            self._update_job_status(run_id, job_name, STATUS_SKIPPED)
+                            for dep in dag.get_dependents(job_name):
+                                job_statuses[dep] = STATUS_SKIPPED
+                                self._update_job_status(run_id, dep, STATUS_SKIPPED)
+                        else:
+                            jobs_to_run.append(job_name)
 
                     tasks = []
                     for job_name in jobs_to_run:
